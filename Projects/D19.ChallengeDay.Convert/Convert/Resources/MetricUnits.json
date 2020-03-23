@@ -1,0 +1,22 @@
+[
+    {
+        "id" : 0,
+        "name" : "毫米",
+        "coefficient" : 1.0
+    },
+    {
+        "id" : 1,
+        "name" : "厘米",
+        "coefficient" : 10.0
+    },
+    {
+        "id" : 2,
+        "name" : "米",
+        "coefficient" : 1000.0
+    },
+    {
+        "id" : 3,
+        "name" : "千米",
+        "coefficient" : 1000000.0
+    }
+]

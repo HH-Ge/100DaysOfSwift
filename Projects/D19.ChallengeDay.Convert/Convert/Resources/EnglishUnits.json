@@ -1,0 +1,23 @@
+[
+    {
+        "id" : 0,
+        "name" : "英寸",
+        "coefficient" : 1.0
+    },
+    {
+        "id" : 1,
+        "name" : "英尺",
+        "coefficient" : 12.0
+    },
+    {
+        "id" : 2,
+        "name" : "码",
+        "coefficient" : 36.0
+    },
+    {
+        "id" : 3,
+        "name" : "英里",
+        "coefficient" : 60120.0
+    }
+]
+
