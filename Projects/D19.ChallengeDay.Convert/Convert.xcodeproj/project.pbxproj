@@ -13,7 +13,6 @@
 		1C68849A24287E4000E6675C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C68849924287E4000E6675C /* Assets.xcassets */; };
 		1C68849D24287E4000E6675C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C68849C24287E4000E6675C /* Preview Assets.xcassets */; };
 		1C6884A024287E4000E6675C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C68849E24287E4000E6675C /* LaunchScreen.storyboard */; };
-		1C6884A824287ECB00E6675C /* ConvertUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6884A724287ECB00E6675C /* ConvertUnit.swift */; };
 		1C6884AC24287EEB00E6675C /* Units.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6884AA24287EEB00E6675C /* Units.swift */; };
 		1C6884AD24287EEB00E6675C /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6884AB24287EEB00E6675C /* Data.swift */; };
 		1C6884B22428802100E6675C /* AllUnits.json in Resources */ = {isa = PBXBuildFile; fileRef = 1C6884AF2428802100E6675C /* AllUnits.json */; };
@@ -30,7 +29,6 @@
 		1C68849C24287E4000E6675C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1C68849F24287E4000E6675C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C6884A124287E4000E6675C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1C6884A724287ECB00E6675C /* ConvertUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConvertUnit.swift; path = "../../D16-18.WeSplit/WeSplit/ConvertUnit.swift"; sourceTree = "<group>"; };
 		1C6884AA24287EEB00E6675C /* Units.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Units.swift; sourceTree = "<group>"; };
 		1C6884AB24287EEB00E6675C /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		1C6884AF2428802100E6675C /* AllUnits.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AllUnits.json; sourceTree = "<group>"; };
@@ -70,7 +68,6 @@
 			children = (
 				1C6884AE2428802100E6675C /* Resources */,
 				1C6884A924287EEB00E6675C /* Models */,
-				1C6884A724287ECB00E6675C /* ConvertUnit.swift */,
 				1C68849324287E3F00E6675C /* AppDelegate.swift */,
 				1C68849524287E3F00E6675C /* SceneDelegate.swift */,
 				1C68849724287E3F00E6675C /* ContentView.swift */,
@@ -185,7 +182,6 @@
 			files = (
 				1C68849424287E3F00E6675C /* AppDelegate.swift in Sources */,
 				1C6884AD24287EEB00E6675C /* Data.swift in Sources */,
-				1C6884A824287ECB00E6675C /* ConvertUnit.swift in Sources */,
 				1C68849624287E3F00E6675C /* SceneDelegate.swift in Sources */,
 				1C6884AC24287EEB00E6675C /* Units.swift in Sources */,
 				1C68849824287E3F00E6675C /* ContentView.swift in Sources */,

@@ -15,6 +15,7 @@ let MetricUnits: [LengthUnit] = load("MetricUnits.json")
 let EnglishUnits: [LengthUnit] = load("EnglishUnits.json")
 let AllUnits: [LengthUnits] = load("AllUnits.json")
 let temp = 0
+
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
     
