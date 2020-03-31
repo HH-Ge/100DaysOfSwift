@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "MetricUnits.unsafeMutableAddressor:Data.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in Test.__preview__body.getter:Test.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "EnglishUnits">
+            </PersistentString>
+            <PersistentString
+               value = "AllUnits">
+            </PersistentString>
+            <PersistentString
+               value = "MetricUnits">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ConvertUnit.body.getter:ConvertUnit.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Test.body.getter:Test.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ConvertUnit.__preview__json.getter:ConvertUnit.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
