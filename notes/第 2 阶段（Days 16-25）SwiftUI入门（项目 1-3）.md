@@ -390,75 +390,31 @@ struct ContentView: View {
 
 ## [百日学 Swift（Day 18）](https://www.hackingwithswift.com/100/18) – Project 1, part three（项目 1 ：第 3 部分）
 
-> 昨天选人数的 Picker 太丑了，体验也不好。类似教程里面说的，这个地方还是不要用这种控件，至少要改成 TextField。我改成了 stepper，毕竟 10 人以上的大聚会毕竟少见。
+昨天选人数的 Picker 太丑了，体验也不好。类似教程里面说的，这个地方还是不要用这种控件，至少要改成 TextField。我改成了 stepper，毕竟 10 人以上的大聚会毕竟少见（当然也可以调整 stepper 的取值范围），并对界面进行了细微的调整。
 
-通过对界面进行了细微的调整后，程序如下：
+### 1. 项目盘点
 
-```swift
-struct ContentView: View {
-    @State private var checkAmount = ""     // 消费金额
-    @State private var numberOfPeople = 2   // 人数，默认为 2
-    @State private var tipPercentageIndex = 2    // 小费百分率 tipPercentages 数组的下标，默认为 2
-    
-    let tipPercentages = [5,10,15,20,0]     // 小费百分率数组：可能的小费比率
-    
-    var tipSelection: Double { return Double(tipPercentages[tipPercentageIndex]) }  //小费费率
-    var orderAmount: Double { return Double(checkAmount) ?? 0}                      // 消费金额
-    var tipValue: Double { return orderAmount / 100 * tipSelection }                // 小费金额
-    var grandTotal: Double { return orderAmount + tipValue }     // 消费总计 = 消费金额 + 小费金额
-    var totalPerPerson: Double { return grandTotal / Double(numberOfPeople) }       // 人均消费
+（1）Form 中 Section 将表单分为了一个一个的区域，可以带个标题，这样看起来比较舒服
 
-    
-    var body: some View {
-        NavigationView {
-            Form {            
-                Section {
-                    HStack {
-                        Text("消费金额：￥")
-                        TextField("请输入消费金额", text: $checkAmount)  // 输入消费金额
-                            .keyboardType(.decimalPad)
-                    }
-                    HStack {
-                        Text("消费人数：")
-                        Stepper(value: $numberOfPeople, in: 2...10) {
-                            Text("\(numberOfPeople) 人")
-                        }
-                    }
-                }
-                
-                Section(header: Text("小费计算")) {
-                    HStack {
-                        Text("费率：")
-                        Picker("Tip percentage", selection: $tipPercentageIndex) {
-                            // 遍历tipPercentages
-                            ForEach(0 ..< tipPercentages.count) { index in  
-                                Text("\(self.tipPercentages[index])%")
-                            }
-                        }
-                    }
-                    Text("金额：￥\(orderAmount / 100 * tipSelection, specifier: "%.2f")")
-                }.pickerStyle(SegmentedPickerStyle())   // 使用分段控件选择百分率
-                
-                Section(header: Text("总计")) {
-                    Text("消费总计：￥\(grandTotal, specifier: "%.2f")")     
-                    Text("人均消费：￥\(totalPerPerson, specifier: "%.2f")")    
-                }
-                
-            }.navigationBarTitle("WeSplit")     // 导航栏标题，要加在 Form 上，不能加在 NavigationView 上
-        }
-    }
-}
-```
+（2）Section 中默认就是一行一行的排列的表单控件，如果想给 TextField 等控件加上标签，可以考虑 HStack。实际上，个人感觉可以认为 Section 中就是 HStack 的集合。
 
-### 【项目带来的个人体会】
+（3）SwiftUI 中父视图中只能包含不多于 10 个子视图。（即一个 VStack 中，最多只能有10个同级HStack）
 
-> - Form 中 Section 将表单分为了一个一个的区域，可以带个标题，这样看起来比较舒服
->- Section 中默认就是一行一行的排列的表单控件，如果想给 TextField 等控件加上标签，可以考虑 HStack。实际上，个人感觉可以认为 Section 中就是 HStack 的集合。
-> - SwiftUI 中父视图中只能包含不多于 10 个子视图。（即一个 VStack 中，最多只能有10个同级HStack）
-> - TextField 控件输入的时候，尽量使用 `.keyboardType` 修饰器，这样会大大提高用户体验。
-> - `.navigationBarTitle` 修饰器要加在Form上，因为 NavigationView 中可能包括很多内容，如果在这里使用修饰符，SwiftUI 可能不太能搞懂你究竟想把标题放在哪里。
-> - 计算属性不可能使用 `@State`，呵呵。
-> - 使用 Text 显示数字可以用参数 `specifier` 来设定格式。典型的带两位小数的格式是：`%.2f`
+（4）TextField 控件输入的时候，尽量使用 `.keyboardType` 修饰器，这样会大大提高用户体验。
+
+（5）`.navigationBarTitle` 修饰器要加在Form上，因为 NavigationView 中可能包括很多内容，如果在这里使用修饰符，SwiftUI 可能不太能搞懂你究竟想把标题放在哪里。
+
+（6）计算属性不可能使用 `@State`，呵呵。
+
+（7）使用 Text 显示数字可以用参数 `specifier` 来设定格式。典型的带两位小数的格式是：`%.2f`
+
+### 2. 挑战
+
+（1）使用 TextField 输入人数
+
+（2）如果没有消费，消费总计和人均小计的字体为蓝色
+
+> 项目的源码可以到 [GitHub](https://github.com/HH-Ge/100DaysOfSwift/tree/master/Projects/D16-18.WeSplit) 上查看。
 
 ## [百日学 Swift（Day 19）](https://www.hackingwithswift.com/100/swiftui/19) – Challenge day（挑战：长度单位转换）
 
@@ -899,120 +855,326 @@ struct ContentView: View {
 
 按钮点击改变 `showingAlert` 的状态，`alert` 修饰器监视到状态改变，触发警报显示。
 
-## [Day 21](https://www.hackingwithswift.com/100/swiftui/21) – Project 2, part two
+## [百日学 Swift（Day 21）](https://www.hackingwithswift.com/100/swiftui/21) – Project 2, part two（项目 2 ：第 2 部分）
 
-**Today you have three topics to work through, in which you’ll apply your knowledge of `VStack`, `LinearGradient`, `Alert`, and more.**
+没有完全按照教程的内容，适当做了一些调整
 
-#### [1. Stacking up buttons](https://www.hackingwithswift.com/books/ios-swiftui/stacking-up-buttons)（堆叠按钮）
+### 1. 准备工作
+
+（1）创建国旗的结构体，两个属性：国旗图片名（`flagName`）和国家名（`name`）。
 
 ```swift
-.alert(isPresented: $showingScore) {
-    Alert(title: Text(scoreTitle), message: Text("Your score is ???"), dismissButton: .default(Text("Continue")) {
-        self.askQuestion()
-    })
+struct country {            // 国家
+    var flagName: String    // 图片名称
+    var name: String     	// 国家名称
 }
 ```
 
-#### [2. Showing the player’s score with an alert](https://www.hackingwithswift.com/books/ios-swiftui/showing-the-players-score-with-an-alert)（使用警告消息显示玩家得分）
+（2）初始化国旗数组
 
+```swift
+let countryArray: [country] = [                     // 初始化，这个内容不能放在 ContentView 中，否则报错
+    country(flagName: "Estonia", name: "爱沙尼亚"),
+    country(flagName: "France", name: "法国"),
+    country(flagName: "Germany", name: "德国"),
+    country(flagName: "Ireland", name: "爱尔兰"),
+    country(flagName: "Italy", name: "意大利"),
+    country(flagName: "Nigeria", name: "尼日利亚"),
+    country(flagName: "Poland", name: "波兰"),
+    country(flagName: "Russia", name: "俄罗斯"),
+    country(flagName: "Spain", name: "西班牙"),
+    country(flagName: "UK", name: "英国"),
+    country(flagName: "US", name: "美国")
+]
+```
 
+以上两步的代码要放在 ContentView 结构体之外，否则会报错。
+
+（3）准备好题目
+
+```swift
+    @State private var countries = countryArray.shuffled()          // 打乱数组元素顺序
+    @State private var correctAnswer = Int.random(in: 0...2)        // 在 0-2 之间随机选一个值
+```
 
 > #### Shuffled 和 shuffle 的区别
 >
+> 打乱的效果是一样的，只是用途不同。
+>
 > - ##### shuffled
 >
->     Returns the elements of the sequence, shuffled.
+>     是一个普通函数，***有返回值***，可以赋值给其他数组。
 >
->     ------
->
->     ##### Declaration
->
->     ```
->     func shuffled() -> [Base.Element]
->     ```
->
->     ##### Return Value
->
->     A shuffled array of this sequence’s elements.
->
->     ##### Discussion
->
->     For example, you can shuffle the numbers between `0` and `9` by calling the `shuffled()` method on that range:
->
->     ```swift
->     let numbers = 0...9
->     let shuffledNumbers = numbers.shuffled()
->     // shuffledNumbers == [1, 7, 6, 2, 8, 9, 4, 3, 5, 0]
->     ```
->
->     This method is equivalent to calling `shuffled(using:)`, passing in the system’s default random generator.
->
->     Complexity: O(*n*), where *n* is the length of the sequence.
+> ```swift
+> func shuffled() -> [Base.Element]
+> ```
 >
 > ------
 >
 > - ##### Shuffle
 >
->     Shuffles the collection in place.
->
->     ------
->
-> ##### Declaration
->
-> ```
-> mutating func shuffle()
-> ```
->
-> ##### Discussion
->
-> Use the `shuffle()` method to randomly reorder the elements of an array.
+>     是一个 mutating 函数，用于改变自身，所以***没有返回值***，改变的是***调用者***自己。
 >
 > ```swift
-> var names = ["Alejandro", "Camila", "Diego", "Luciana", "Luis", "Sofía"]
-> names.shuffle(using: myGenerator)
-> // names == ["Luis", "Camila", "Luciana", "Sofía", "Alejandro", "Diego"]
+> mutating func shuffle()
 > ```
+
+*（4）声明记录分数的状态
+
+```swift
+@State private var score = 0                                    // 得分，答对数量
+@State private var questionNum = 0                              // 题目数
+```
+
+### [2. Stacking up buttons](https://www.hackingwithswift.com/books/ios-swiftui/stacking-up-buttons)（堆叠按钮）
+
+有了前面的准备，现在开始设计 UI，使用 VStack 作为容器。
+
+（1）先使用一个 VStack 将文字部分包裹好。
+
+```swift
+VStack(spacing: 20) {
+    Text("猜国旗")
+        .font(.largeTitle)
+        .fontWeight(.black)
+    Text("请点击下面你认为正确的国旗")
+        // .font(.subheadline)
+        .fontWeight(.bold)
+    Text(countries[correctAnswer].name)
+        .font(.title)
+        .fontWeight(.black)
+}.foregroundColor(.white)
+```
+
+（2）使用循环创建三个按钮，按钮的图片为国旗，动作为调用 `flagTapped()`，传入当前按钮的索引值供检查正确与否。
+
+```swift
+ForEach(0..<3) { number in
+	Button(action: {
+		self.flagTapped(number)             	// 按钮动作
+	}) {
+		Image(self.countries[number].flagName)
+            .renderingMode(.original)
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(Color.gray, lineWidth: 1))
+    }
+    .shadow(color: Color(.white), radius: 5, x: 15, y: 15)
+}
+```
+
+（3）将按钮与文字部分共同放入一个 VStack 中。
+
+（4）使用 ZStack 包裹，在最底层增加底色。
+
+```swift
+ZStack {
+    // Color.blue.edgesIgnoringSafeArea(.all)  		是另一种使用纯色的方法
+    LinearGradient(
+        gradient: Gradient(colors: [.blue, .black]), 
+        startPoint: .topLeading, 
+        endPoint: .bottomLeading).edgesIgnoringSafeArea(.all)  // 使用渐进做底色
+
+    VStack(spacing: 30) {
+        VStack(spacing: 20) {		//文字部分
+```
+
+（5）适当调整界面，如边距、字体、颜色等.
+
+```swift
+var body: some View {
+        ZStack {
+            // Color.blue.edgesIgnoringSafeArea(.all)
+            LinearGradient(
+                gradient: Gradient(colors: [.blue, .black]), 
+                startPoint: .topLeading, 
+                endPoint: .bottomLeading).edgesIgnoringSafeArea(.all)  // 使用渐进做底色
+            
+            VStack(spacing: 30) {
+                VStack(spacing: 20) {		//文字部分
+                    Text("猜国旗")
+                        .font(.largeTitle)
+                        .fontWeight(.black)
+                    Text("请点击下面你认为正确的国旗")
+                            // .font(.subheadline)
+                            .fontWeight(.bold)
+                    Text(countries[correctAnswer].chsName)	// 国家中文名字
+                    .font(.title)
+                    .fontWeight(.black)
+                }.foregroundColor(.white)
+                
+                ForEach(0..<3) { number in					// 三个按钮
+                    Button(action: {
+                        self.flagTapped(number)             // 按钮动作
+                    }) {
+                        Image(self.countries[number].name)	// 图片名称
+                            .renderingMode(.original)		// 显示原图
+                            .clipShape(Capsule())			// 剪裁成胶囊形状
+                            .overlay(Capsule().stroke(Color.black, lineWidth: 1))	// 边框 
+                    }
+                    .shadow(color: Color(.black), radius: 5, x: 0, y: 5)	// 阴影
+                }
+                Spacer()
+            }
+            .padding(.top, 30)	// 边距
+        }
+        .alert(isPresented: $showingScore) {
+            Alert(
+                title: Text(scoreTitle), 
+                message: Text("你已经猜了 \(questionNum) 次\n你猜对了 \(score) 次"), 
+                dismissButton: .default(Text("继续")){
+                	self.askQuestion()
+            })
+        }
+    }
+```
+
+### [2. Showing the player’s score with an alert](https://www.hackingwithswift.com/books/ios-swiftui/showing-the-players-score-with-an-alert)（使用警告消息显示玩家得分）
+
+（1）声明控制警告对话框的状态
+
+```swift
+@State private var showingScore = false                         // 控制显示警告，默认不显示
+@State private var scoreTitle = ""                              // 警告信息
+```
+
+（2）响应按钮的点击动作的函数 flagTapped
+
+```swift
+func flagTapped(_ number: Int) {
+    questionNum += 1                        // 题目数量 +1
+    if number == correctAnswer {
+        scoreTitle = "恭喜你，答对了！！"
+        score += 1                          // 答对时，得分 +1
+    } else {
+        scoreTitle = "不太对呢，再想想？"
+    }
+    showingScore = true
+}
+```
+
+（3）给 ZStack 加上 alert 修饰
+
+```swift
+.alert(isPresented: $showingScore) {
+    Alert(
+        title: Text(scoreTitle), 
+        message: Text("你已经猜了 \(questionNum) 次\n你猜对了 \(score) 次"), 
+        dismissButton: .default(Text("继续")){	
+        	self.askQuestion()		// 点击 继续 按钮的动作
+    })
+}
+```
+
+（4）复位题目 askQuestion
+
+```swift
+func askQuestion() {
+    countries.shuffle()
+    correctAnswer = Int.random(in: 0...2)
+}
+```
+
+### [3. Styling our flags](https://www.hackingwithswift.com/books/ios-swiftui/styling-our-flags)（修改国旗的样式）
+
+```
+Image(self.countries[number].name)	// 图片名称
+    .renderingMode(.original)		// 显示原图
+    .clipShape(Capsule())			// 剪裁成胶囊形状
+    .overlay(Capsule().stroke(Color.black, lineWidth: 1))	// 边框 
+```
+
+## [百日学 Swift（Day 22）](https://www.hackingwithswift.com/100/swiftui/22) – Project 2, part three（项目 2 ：第 3 部分）
+
+### 1. 项目盘点
+
+（1）练习了各种堆栈容器的包裹，通过堆栈可以迅速地将子组件组合成视图，同时也能让我们感受到视图的设计可以从细节开始，围绕功能做出一个个子组件或者子视图，再用容器组合到一起。
+
+（2）练习了使用条件控制状态和应用计算属性。
+
+（3）学习了 alert 修饰，练习了各种修饰器。
+
+（4）练习了诸如底色、图像原图显示等小技巧。
+
+### 2. 挑战
+
+目前项目中已经在警告框里显示了题目数和回答正确数，试着完成下面的任务：
+
+- 警告信息中答错了要告诉正确答案
+
+- 警告信息中，要有答对答错的计数和正确率
+
+> 项目的源码可以到 [GitHub](https://github.com/HH-Ge/100DaysOfSwift/tree/master/Projects/D20-22.GuessTheFlag) 上查看。
 >
-> This method is equivalent to calling `shuffle(using:)`, passing in the system’s default random generator.
->
-> Complexity: O(*n*), where *n* is the length of the collection.
 
 
 
-#### [3. Styling our flags](https://www.hackingwithswift.com/books/ios-swiftui/styling-our-flags)
+## [百日学 Swift（Day 23）](https://www.hackingwithswift.com/100/swiftui/23) – Project 3, part one（项目 3 ：第 1 部分）
 
-## [Day 22](https://www.hackingwithswift.com/100/swiftui/22) – Project 2, part three
+### [1. Views and modifiers: Introduction](https://www.hackingwithswift.com/books/ios-swiftui/views-and-modifiers-introduction)（视图和修饰器简介）
 
-**Today you should work through the wrap up chapter for project 2, complete its review, then work through all three of its challenges.**
+本项目实际上是第一个*技术项目* ——深入探索 SwiftUI 功能，并仔细研究其运作方式以及*运作机制*。
 
-- [Guess the Flag: Wrap up](https://www.hackingwithswift.com/books/ios-swiftui/guess-the-flag-wrap-up)（猜旗子：总结）
+本项目中将研究视图和视图修饰器，并希望回答对此最常见的问题—— SwiftUI 为什么将视图定义为结构体？为什么使用这么多`some View`？*修饰器如何真正起作用？
 
-> 挑战：
->
-> 1. 警告信息中答错了要告诉正确答案
-> 2. 警告信息中，要有答对答错的计数
+首先，创建一个名为 ViewsAndModifiers 的新 Single View App 项目。
 
+### [2. Why does SwiftUI use structs for views?](https://www.hackingwithswift.com/books/ios-swiftui/why-does-swiftui-use-structs-for-views)（为何 SwiftUI 中的视图使用的是结构体）
 
+首先，结构比类更简单，更快，从而可以带来更好的性能。这的确是非常重要的原因，但还不是全部。尽管性能很重要，但视图采用结构体还有更重要的原因：它迫使我们考虑以一种干净的方式隔离状态。类可以自由更改值，这可能导致代码混乱—— SwiftUI 如何知道何时更改了值然后要更新UI？
 
-## [Day 23](https://www.hackingwithswift.com/100/swiftui/23) – Project 3, part one
+通过生成不会随时间变化的视图，SwiftUI 鼓励将设计思路转向更具功能性的方向：把视图变得简单，惰性的东西将数据转换为UI，而不是变得无法控制的智能化东西。
 
-**Today you have 11 topics to work through, in which you’ll learn to build custom view modifiers, custom containers, and more.**
+当查看可以作为视图的事物时，可以看到这一点。前面已经使用`Color.blue`和`LinearGradient`作为视图——它们都是包含很少数据的琐碎类型。实际上，没有比使用`Color.blue`视图更简单的了：除了*用蓝色填充我的空间*之外，它不包含任何其他信息。
 
-#### [1. Views and modifiers: Introduction](https://www.hackingwithswift.com/books/ios-swiftui/views-and-modifiers-introduction)（视图和修饰器简介）
+相比之下，Apple的[UIView文档](https://developer.apple.com/documentation/uikit/uiview)列出了大约200种`UIView`具有的属性和方法，无论是否需要它们，所有这些属性和方法都将传递给其子类。
 
-创建项目：ViewsAndModifiers
+### [3. What is behind the main SwiftUI view?](https://www.hackingwithswift.com/books/ios-swiftui/what-is-behind-the-main-swiftui-view)（SwiftUI 视图的背后是什么？）
 
-[Why does SwiftUI use structs for views?](https://www.hackingwithswift.com/books/ios-swiftui/why-does-swiftui-use-structs-for-views)（为何 SwiftUI 中的视图使用的是结构体）
+每次新建文件都会看到下面的代码
 
-首先，有一个性能要素：结构比类更简单，更快。性能很重要，但作为结构的视图还是要重要得多：它迫使我们考虑以一种干净的方式隔离状态。您会看到，类可以自由更改其值，这可能导致代码混乱——SwiftUI如何知道何时更改了值以更新UI？通过生成不会随时间变化的视图，SwiftUI鼓励我们转向更具功能性的设计方法：我们的视图变得简单，惰性的东西将数据转换为UI，而不是变得无法控制的智能化东西。相比之下，Apple的[UIView文档](https://developer.apple.com/documentation/uikit/uiview)列出了大约200种`UIView`具有的属性和方法，无论是否需要它们，所有这些属性和方法都将传递给其子类。
+```swift
+struct ContentView: View {
+    var body: some View {
+        Text("Hello World")
+    }
+}
+```
 
-#### [2. What is behind the main SwiftUI view?](https://www.hackingwithswift.com/books/ios-swiftui/what-is-behind-the-main-swiftui-view)（SwiftUI 视图的背后是什么？）
+然后，可能我们想把屏幕的背景色设置成蓝色，于是
 
+```swift
+struct ContentView: View {
+    var body: some View {
+        Text("Hello World")
+            .background(Color.blue)
+    }
+}
+```
 
+但是会发现，蓝色只应用到了文字的后面，其他的地方还是白茫茫一片。于是可能会问：怎么才能把视图的后面的东西变成蓝色？但是实际上对 SwiftUI 而言，***视图后面空空如也***。当然你要非得使用 SwiftUI 之外的招数把它“***黑***”成蓝色我没话说。
 
-#### [3. Why modifier order matters](https://www.hackingwithswift.com/books/ios-swiftui/why-modifier-order-matters)（为何修饰器的顺序很重要）
+那么只好换个思路，那就是让 Text 视图占满屏幕，
 
-下面的代码*不会*在中间看到带有“ Hello World”的200x200红色按钮。相反，您会看到一个200x200的空正方形，中间是“ Hello World”，在“ Hello World”的正周围有一个红色矩形。
+```swift
+Text("Hello World")
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.blue)
+```
+
+这就好了，嗯，还可以更好，
+
+```swift
+Text("Hello World")
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.blue)
+    .edgesIgnoringSafeArea(.all)
+```
+
+看看，这下彻底了！
+
+### [4. Why modifier order matters](https://www.hackingwithswift.com/books/ios-swiftui/why-modifier-order-matters)（为何修饰器的顺序很重要）
+
+下面的代码*不会*在屏幕中间看到带有“ Hello World ”的 200x200 红色按钮。相反，会看到一个 200x200 的空正方形，中间是背景为红色的 “ Hello World”。
 
 ```swift
 Button("Hello World") {
@@ -1022,21 +1184,23 @@ Button("Hello World") {
 .frame(width: 200, height: 200)
 ```
 
-Swift的`type(of:)`方法会打印特定值的确切类型，在这种情况下，它将打印以下内容：`ModifiedContent, _BackgroundModifier>, _FrameLayout>`
+Swift 的`type(of:)`方法会打印特定值的确切类型，在这种情况下，它将打印以下内容：
 
-您可以在此处看到两件事：
+`ModifiedContent<ModifiedContent<Button<Text>, _BackgroundModifier<Color>>, _FrameLayout>`
 
-- 每次我们修改视图时，SwiftUI都会使用泛型：来应用该修改器`ModifiedContent`。
-- 当我们应用多个修饰符时，它们会叠加起来： `ModifiedContent
+这里面有两件事：
 
-要了解类型是什么，请从最里面的类型开始，然后逐步解决：
+- 每次修改视图时，SwiftUI都会使用泛型 **ModifiedContent<OurThing, OurModifier>** 到修饰器。
+- 当我们应用多个修饰器时，它们会叠加起来： **ModifiedContent<ModifiedContent<…**
 
-- 最里面的类型是`ModifiedContent, _BackgroundModifier`：我们的按钮上有一些带有背景色的文本。
-- 周围有个`ModifiedContent<…, _FrameLayout>`，它具有我们的第一个视图（按钮+背景色），并具有较大的框架。
+要了解类型是什么，得从最里面的类型开始，然后逐步解决：
 
-如您所见，我们以`ModifiedContent`堆叠的类型结尾–每个视图都需要一个视图进行转换以及要进行的实际更改，而不是直接修改视图。
+- 最里面的类型是`ModifiedContent<Button<Text>, _BackgroundModifier<Color>`：按钮上的文本带有背景色。
+- 外面包裹的是`ModifiedContent<…, _FrameLayout>`，前面第一个视图（按钮+背景色）有个框架。
 
-**这意味着修饰符的顺序很重要。**如果我们重写代码以在帧*后*应用背景色，那么您可能会得到预期的结果：
+所以，这种以`ModifiedContent`堆叠的类型结尾说明**修饰器每次都是对前面的结果进行修饰，而不是修饰最初的视图**。这么一来，修饰器的顺序就变得非常重要了
+
+如果我们重写代码，先用 frame 修饰，再应用背景色，那么可能会得到预期的结果：
 
 ```swift
 Button("Hello World") {
@@ -1046,11 +1210,9 @@ Button("Hello World") {
 .background(Color.red)
 ```
 
-现在最好的考虑方法是，想象一下SwiftUI在每个修饰符之后都会呈现您的视图。
+修饰器有一个重要的*副作用*。我们可以多次应用相同的效果：每个修饰符都会简单地添加到以前的内容中。
 
-使用修饰符的一个重要副作用是，我们可以多次应用相同的效果：每个修饰符都会简单地添加到以前的内容中。
-
-例如，SwiftUI为我们提供了`padding()`修饰符，该修饰符在视图周围添加了一些空间，从而不会与其他视图或屏幕边缘发生冲突。如果我们应用填充，然后应用背景色，然后应用更多填充和不同的背景色，则可以为视图提供多个边框，如下所示：
+例如，SwiftUI 为我们提供了`padding()`修饰符，该修饰符在视图周围添加了一些空间，从而不会与其他视图或屏幕边缘发生冲突。如果我们应用填充，然后应用背景色，然后应用更多填充和不同的背景色，则可以为视图提供多个边框，如下所示：
 
 ```swift
 Text("Hello World")
@@ -1064,18 +1226,18 @@ Text("Hello World")
     .background(Color.yellow)
 ```
 
-#### [4. Why does SwiftUI use “some View” for its view type?](https://www.hackingwithswift.com/books/ios-swiftui/why-does-swiftui-use-some-view-for-its-view-type)（SwiftUI 为何选择 some View 作为视图类型）
+### [5. Why does SwiftUI use “some View” for its view type?](https://www.hackingwithswift.com/books/ios-swiftui/why-does-swiftui-use-some-view-for-its-view-type)（SwiftUI 为何选择 some View 作为视图类型）
 
-`some View`意味着“一种符合`View`协议的特定类型，
+`some View`的意思是*某种符合`View`协议的特定类型*。
 
 返回`some View`与仅返回`View`相比，有两个重要区别：
 
-1. 我们必须始终返回相同类型的视图。
-2. 即使我们不知道返回哪种视图类型，编译器也会知道。
+- 我们必须始终返回相同类型的视图。
+- 即使我们不知道返回哪种视图类型，编译器也会知道。
 
-第一个差异对性能很重要：SwiftUI需要能够查看我们显示的视图并了解它们如何更改，以便可以正确更新用户界面。如果允许我们随机更改视图，SwiftUI要准确找出更改的内容确实很慢——几乎需要放弃所有内容，并在每次小的更改后重新开始。
+第一个差异对性能很重要：SwiftUI 需要能够查看视图并了解它们的改动，以便可以正确更新用户界面。如果允许我们随机更改视图，SwiftUI 要准确找出更改的内容确实很慢——几乎需要放弃所有内容，并在每次小的更改后重新开始。
 
-第二个区别很重要，因为SwiftUI使用`ModifiedContent`来构建其数据的方式。
+第二个区别很重要，因为SwiftUI使用`ModifiedContent`的方式来构建其数据。
 
 因此，虽然不允许编写这样的视图：
 
@@ -1097,18 +1259,22 @@ struct ContentView: View {
 }
 ```
 
-> TupleView 好像是所有视图的。。。依赖？查看源码有下面的内容
+【深入研究】
+
+类似 VStack 的容器，系统使用 TupleView （元组视图）实现。在容器里每创建一个子视图时，系统会添加到这个 TupleView 中。不过有个数限制，不得超过 10 个。
+
+> 查看源码发现下面的内容
 >
 > ```swift
 > extension ViewBuilder {
 > 
->  public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> TupleView<(C0, C1, C2, C3, C4, C5, C6, C7, C8, C9)> where C0 : View, C1 : View, C2 : View, C3 : View, C4 : View, C5 : View, C6 : View, C7 : View, C8 : View, C9 : View
+> public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> TupleView<(C0, C1, C2, C3, C4, C5, C6, C7, C8, C9)> where C0 : View, C1 : View, C2 : View, C3 : View, C4 : View, C5 : View, C6 : View, C7 : View, C8 : View, C9 : View
 > }
 > ```
 >
 > 推测这是每个父容器只能允许10个子视图的原因。（地雷秘密终于找到了~~嘿嘿😜）
 
-#### [5. Conditional modifiers](https://www.hackingwithswift.com/books/ios-swiftui/conditional-modifiers)（条件修饰器）
+### [6. Conditional modifiers](https://www.hackingwithswift.com/books/ios-swiftui/conditional-modifiers)（条件修饰器）
 
 > 要尽量使用 三元运算符 而不是 if 语句来控制修饰器。
 
@@ -1118,10 +1284,9 @@ struct ContentView: View {
 
     var body: some View {
         Button("Hello World") {
-            // flip the Boolean between true and false
-            self.useRedText.toggle()            
+            self.useRedText.toggle()            		// 切换 useRedText 状态
         }
-        .foregroundColor(useRedText ? .red : .blue)
+        .foregroundColor(useRedText ? .red : .blue)		// 根据状态进行选择
     }
 }
 ```
@@ -1141,11 +1306,11 @@ var body: some View {
 }
 ```
 
-请记住，这`some View`表示“将返回一种特定类型的View，但是我们不想说什么。” 由于SwiftUI使用通用`ModifiedContent`包装器创建新视图的方式，`Text(…)`并且`Text(…).background(Color.red)`它们是不同的基础类型，并且与并不兼容`some View`。
+请记住，`some View`表示某种特定类型的 View。 由于 SwiftUI 使用通用包装器`ModifiedContent`创建新视图的方式，`Text(…)`和`Text(…).background(Color.red)`是不同的基础类型，并且与`some View`并不兼容。
 
-#### [6. Environment modifiers](https://www.hackingwithswift.com/books/ios-swiftui/environment-modifiers)（环境修饰器）
+### [7. Environment modifiers](https://www.hackingwithswift.com/books/ios-swiftui/environment-modifiers)（环境修饰器）
 
-可以将许多修饰符应用于容器，这使我们可以将同一修饰符同时应用于多个视图。
+在容器上应用修饰器会将同一修饰效果同时应用于容器内的多个子视图。
 
 ```swift
 VStack {
@@ -1177,9 +1342,9 @@ VStack {
 
 **所以……只能是试验！！！**
 
-#### [7. Views as properties](https://www.hackingwithswift.com/books/ios-swiftui/views-as-properties)（视图作为属性）
+### [8. Views as properties](https://www.hackingwithswift.com/books/ios-swiftui/views-as-properties)（视图作为属性）
 
-例如，我们可以像这样创建两个文本视图作为属性，然后在a内使用它们`VStack`：
+可以像这样创建两个文本视图作为属性，然后在`VStack`内使用它们：
 
 ```swift
 struct ContentView: View {
@@ -1195,7 +1360,7 @@ struct ContentView: View {
 }
 ```
 
-您甚至可以在使用这些属性时直接将修饰符应用于这些属性，如下所示：
+甚至可以在使用这些属性时直接将修饰器应用于这些属性，
 
 ```swift
 VStack {
@@ -1206,19 +1371,43 @@ VStack {
 }
 ```
 
-Swift不允许创建一个引用其他存储属性的存储属性（**应该是创建 `计算属性`**），因为在创建对象时会引起问题。这意味着尝试创建`TextField`与本地属性的绑定将导致问题。
+Swift 不允许创建一个引用其他存储属性的存储属性（**应该是创建 `计算属性`**），因为在创建对象时会引起问题。这意味着直接将属性创建为TextField会有问题。
 
-#### [8. View composition](https://www.hackingwithswift.com/books/ios-swiftui/view-composition)（组合视图）
+```swift
+@State var str = "hello"
+var abc = TextField("引用变量 str", text: $str)
+```
 
-主要是两个方面
+结果报错，看起来是少了 self，其实即使加上也没有用
 
-（1）将复杂视图拆分成小的视图组件，便于维护和扩展
+```shell
+Cannot use instance member 'str' within property initializer; property initializers run before 'self' is available
+```
 
-（2）将类型、外观相似的视图抽取为子视图，可以充分代码复用
+所以需要改成计算属性：就不会报错了
 
-#### [9. Custom modifiers](https://www.hackingwithswift.com/books/ios-swiftui/custom-modifiers)（自定义修饰器）
+```swift
+@State var str = "hello"
+var abc: some View {
+	TextField("引用变量 str", text: $str)
+}
+```
 
-（1）定义修饰器
+### [9. View composition](https://www.hackingwithswift.com/books/ios-swiftui/view-composition)（组合视图）
+
+主要是以下几个个方面：
+
+（1）将复杂视图拆分成小的视图组件，便于维护和扩展。
+
+（2）将类型、外观相似的视图抽取为子视图，可以充分代码复用。注意：最外层的视图不能被抽取——这是显而易见的。
+
+（3）抽取的时候尽量不带有对整个子视图的修饰，便于在实际应用的时候进行个性化修饰。
+
+（4）抽取子视图的方法是，在要抽取的视图或者容器上使用⌘ 点击，在快捷菜单中选择`Extract subView`，输入子视图名称即可。
+
+### [10. Custom modifiers](https://www.hackingwithswift.com/books/ios-swiftui/custom-modifiers)（自定义修饰器）
+
+（1）定义修饰器，两步。
 
 ```swift
 struct Watermark: ViewModifier {
@@ -1248,10 +1437,10 @@ extension View {
 ```swift
 Color.blue
     .frame(width: 300, height: 200)
-    .watermarked(with: "Hacking with Swift")
+    .watermarked(with: "版权所有 盗版必究")
 ```
 
-#### [10. Custom containers](https://www.hackingwithswift.com/books/ios-swiftui/custom-containers)（自定义容器）
+### [11. Custom containers](https://www.hackingwithswift.com/books/ios-swiftui/custom-containers)（自定义容器）
 
 （1）自定义 网格堆栈
 
@@ -1309,13 +1498,29 @@ func cal(row: Int, col: Int) -> Int {
 }
 ```
 
-## [Day 24](https://www.hackingwithswift.com/100/swiftui/24) – Project 3, part two
+上面只是做出来这个网格堆栈，具体应用还需要看实际需求。
 
-复习
+## [百日学 Swift（Day 24）](https://www.hackingwithswift.com/100/swiftui/24) – Project 3, part two（项目 3 ：第 2 部分）
 
+### 1. 项目盘点
 
+（1）深入了解了 SwiftUI 关于 View 和 some View 的相关知识。
 
+（2）了解了修饰器顺序作用的原因。
 
+（3）使用条件状态控制修饰器。
+
+（4）使用容器组合视图。
+
+（5）自定义修饰符和容器。
+
+### 2. 挑战
+
+- 扩展 font 修饰器，加上需要的样式，像CSS中的 H1 到 H5。
+- 在项目 2 中为国旗图片抽取子视图，在其中加上默认的渲染方式和必要的修饰。
+
+> 项目的源码可以到 [GitHub](https://github.com/HH-Ge/100DaysOfSwift/tree/master/Projects/D23-24.ViewsAndModifiers) 上查看。
+>
 
 
 
@@ -1323,12 +1528,140 @@ func cal(row: Int, col: Int) -> Int {
 
 In the last few days we covered some of the fundamentals of iOS development, and before we move on to the next set of projects it’s important to take a step back and review what you’ve learned.
 
-### [Day 25](https://www.hackingwithswift.com/100/swiftui/25) – Milestone: Projects 1-3
+### [百日学 Swift（Day 25）](https://www.hackingwithswift.com/100/swiftui/25) – Consolidation II, Milestone: Projects 1-3（第 2 阶段总结，里程碑：项目 1-3）
 
- **Today you have three topics to work through, one of which of is your challenge.**
+###  1. 学习内容
 
-- [What you learned](https://www.hackingwithswift.com/guide/ios-swiftui/2/1/what-you-learned)
-- [Key points](https://www.hackingwithswift.com/guide/ios-swiftui/2/2/key-points)
-- [Challenge](https://www.hackingwithswift.com/guide/ios-swiftui/2/3/challenge)
+截至目前，已经完成了两个 SwiftUI 项目和一个技术项目，后面依旧会是这样的节奏继续进行。今天来回忆一下第 2 阶段学到的内容。
 
-## 
+- 构建包括文本与控件（如`Picker`）的滚动表单，SwiftUI会变成漂亮的基于表格的布局，还可以通过滑动出新屏幕做出新的选择。
+- 创建一个`NavigationView`并给予一个标题，不仅能够将新的视图推送到屏幕上，还能够设置标题并避免内容出现问题。
+- 使用`@State`存储变化的数据及这样做的原因。记住，所有的 SwiftUI 视图都是结构体，这意味着如果没有类似`@State`的内容就无法更改它们。
+- 为`TextField`和`Picker`等用户界面控件创建双向绑定，了解如何使用`$variable`读取和写入值。
+- 使用`ForEach`循环快速创建大量视图。
+- 使用`VStack`，`HStack`和`ZStack`构建复杂的布局，并将它们组合在一起以构成网格。
+- 将颜色和渐变可以用作视图，还可以为它们指定特定的 frame，以便控制它们的大小。
+- 通过提供一些文本或图像以及点击按钮时执行的尾随闭包来创建按钮。
+- 通过定义显示警报的条件来创建警报，然后从其他位置切换该状态。
+- SwiftUI 如何（以及为什么！）广泛使用不透明的结果类型（`some View`），与修饰器紧密地联系起来让修饰器的顺序变得非常重要。
+- 如何使用三元运算符创建条件修饰器，这些条件修饰器根据程序状态应用不同的结果。
+- 如何使用视图组合和自定义视图修饰器将代码分解为小部分，从而能够构建更复杂的程序而不会丢失代码。
+
+### 2. 知识要点
+
+- 结构体和类
+- 使用 ForEach
+- 使用绑定
+
+### 3. 挑战
+
+尝试实现“石头、剪刀、布”的游戏。
+
+（1）为出拳创建结构体并将三种拳放入到一个数组里面备用，这个要在 ContentView 外面做，不然很多报错，我还没试出来怎么放在里面去。
+
+```swift
+struct Fist {                       //出拳
+    var id: Int                     // 编号，用于计算结果
+    var imageName: String = ""      // 图片名称
+    var name: String = ""           // 手势名称
+}
+
+let fistArray = [                   // 所有出拳的情况初始化为数组
+    Fist(id: 0, imageName: "cube.fill", name: "石头"),
+    Fist(id: 1, imageName: "scissors", name: "剪刀"),
+    Fist(id: 2, imageName: "stop.fill", name: "布")
+]
+```
+
+其中，每种拳的图片暂时借用了 SF 符号简单显示了，今后如果要使用其他图片，只要将图片文件复制到 `Assets.xcassets`文件夹，然后把 imageName 替换成对应的名字即可。
+
+（2）搭建视图
+
+- VStack 包裹全部内容
+    - 标题
+    - HStack 包裹两张卡片，显示 AI 和玩家的出拳，使用子视图
+    - HStack 包裹三个按钮，分别代表三种拳，使用循环生成
+    - 本局比赛结果
+    - 比赛统计
+    - 复位按钮
+
+（3）子视图
+
+- VStack
+    - 比赛方名字
+    - 出拳图片
+    - 拳名字
+
+参数包括：玩家名字和出拳
+
+（4）从视图中逐步找到需要的状态变量
+
+```swift
+    @State var aiFist: Fist = Fist(id: -1)          // ai出拳
+    @State var playerFist: Fist = Fist(id: -1)      // 玩家出拳
+    @State var lastAiFist: Fist = Fist(id: -1)      // 上次 AI 的出拳，目的是在下一次比赛前保持画面
+
+    @State var result: String = ""                  // 单局比赛结果
+
+    @State var games = 0                            // 总局数
+    @State var playerWin = 0                        // 玩家胜局数
+    @State var evenGames = 0                        // 平局数
+```
+
+（5）更新主视图中调用子视图的语句，加上应该传入的参数
+
+```swift
+HStack(spacing: 20) {
+    card(playerName: "AI", fist: lastAiFist)        //抽取子视图，必须传 lastAiFist，才能保证下次比赛前画面不刷新
+    card(playerName: "Player", fist: playerFist)
+}
+```
+
+（6）更新 Button 中的 action 内容
+
+```swift
+Button(action: {                                            // 按钮响应动作
+    self.aiFist = fistArray[Int.random(in: 0...2)]          // ai出拳为随机
+    self.lastAiFist = self.aiFist                           // 赋值给 lastAiFist 供显示
+    self.playerFist = fistArray[index]                      // 根据按钮点击的 index 确定玩家出拳
+    self.pk(ai: self.lastAiFist, player: self.playerFist)   // 判断比赛结果
+}) {
+    Image(systemName: fistArray[index].imageName)           // 按钮显示的图片
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+}
+```
+
+（7）更新显示比赛结果的 Text
+
+```swift
+Text("本局结果：\(result)")
+	.font(.title)
+Text("共 \(games) 局，玩家胜 \(playerWin) 局，平 \(evenGames) 局")
+```
+
+（8）更新复位按钮的响应代码
+
+```swift
+Button(action: {         // 复位按钮
+    self.games = 0
+    self.playerWin = 0
+    self.evenGames = 0
+}){
+    Text("重新开始")
+}
+```
+
+应该没问题了！挑战成功！！
+
+### 4. 挑战收获
+
+- 使用 `id: Int` 来判定胜负，代码上好写。换成字符串就麻烦了。
+- 视图中使用的结构体和一些不变的内容尽量写在视图以外，这个还需要进一步研究。
+- ForEach 循环生成按钮的范围值不能使用闭合范围，否则报错`Cannot convert value of type 'ClosedRange<Int>' to expected argument type 'Range<Int>'`
+- 子视图的抽取
+- 状态变量的设计，要根据视图的需要逐步产生，最好有默认值，这样 preview 时不用传参。但有时候为了看到某个特定的结果，也可以传入必要的参数。
+- 容器、组件、修饰器的练习
+
+
+
