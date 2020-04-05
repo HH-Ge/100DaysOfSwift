@@ -1,25 +1,25 @@
 import UIKit
 
-struct fist {
-    var imageName: String
-    var gestureName: String
+let rootWord = "balloons"
 
+var str1: [String]
+var str2: [String]
+var str3: [String]
+var str4: [String]
+var str5: [String]
+var str6: [String]
+var str7: [String]
+var str8: [String]
+
+
+var words:[Int: [String]] = [:]
+
+words.updateValue([], forKey: 3)
+
+for i in 3...8 {
+    words.updateValue([], forKey: i)
 }
 
-let gestureArray = [
-    fist(imageName: "cube.fill", gestureName: "石头"),
-    fist(imageName: "scissors", gestureName: "剪刀"),
-    fist(imageName: "stop.fill", gestureName: "布")
-]
-
-let ai = gestureArray.shuffled()[0]
-print(gestureArray)
-print(ai.gestureName)
-
-
-for i in 0..<gestureArray.count {
-    print(gestureArray[i])
-}
-var a = Int.random(in: 0...2)
-
-print(a)
+words[3]?.append("abc")
+words[3]?.append("qwe")
+print(words[3]!)
